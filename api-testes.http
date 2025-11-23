@@ -1,0 +1,28 @@
+//PARA TESTAR O APIREST USAR A EXTENSÃO REST CLIENT DO VS CODE
+
+//Teste 1 - adicionar Novo Compromisso com POST
+
+POST http://localhost:3000/compromissos
+Content-Type: application/json
+
+{
+    "horario_inicio": "25/12/2025 10:00",
+    "horario_fim": "25/12/2025 11:00",
+    "descricao": "Reunião de Planejamento de Fim de Ano"
+}
+
+//Teste 2 - Teste de Regra de Negócio (POST com choque de horário)
+//DEVE retornar status 400 (Bad Request)
+
+POST http://localhost:3000/compromissos
+Content-Type: application/json
+
+{
+    "horario_inicio": "25/12/2025 10:30",
+    "horario_fim": "25/12/2025 11:30",
+    "descricao": "Tentativa de Sobreposição"
+}
+
+// Teste 3 - Listar Todos os Compromissos com GET
+
+GET http://localhost:3000/compromissos
