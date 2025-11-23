@@ -6,7 +6,7 @@ const repo = new sqlite3_repoBD(); //para inicialziar as camadas repositorio e s
 const service = new Service(repo);
 
 const app = express();
-const PORT = 2500;
+const PORT = 3000;
 
 //configura o express para ler json
 app.use(express.json());
