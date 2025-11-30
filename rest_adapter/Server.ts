@@ -43,7 +43,4 @@ app.post('/compromissos', (request: Request, response: Response) => {
 });
 
 //inicializa o servidor na porta definida
-app.listen(PORT, () => {
-    console.log(`[REST Adapter] Porta: ${PORT}`);
-    console.log(`Acesse: http://localhost:${PORT}`);
-});
+app.listen(PORT, () => {});

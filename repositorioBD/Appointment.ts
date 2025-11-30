@@ -23,7 +23,7 @@ export class sqlite3_repoBD implements repoBD {
     }
     
     listarCompromissos(): Compromisso[] {
-        const rows = this.bd
+        const linhas = this.bd
         .prepare(
             `SELECT id, horario_inicio, horario_fim, descricao
                 FROM Compromissos
@@ -32,46 +32,31 @@ export class sqlite3_repoBD implements repoBD {
         .all();
 
     // Converte as linhas do bd em objetos Compromisso
-        return rows.map((row: any) => {
+        return linhas.map((linha: any) => {
             return new Compromisso(
-                row.id,
-                new Date(row.horario_inicio),
-                new Date(row.horario_fim),
-                row.descricao
+                linha.id,
+                new Date(linha.horario_inicio),
+                new Date(linha.horario_fim),
+                linha.descricao
             );
         });
     }
 
     adicionarCompromisso(compromisso: Compromisso): Compromisso {
-        const id = compromisso.getId(); 
-        const inicio_iso = compromisso.getHorario_inicio().toISOString(); // converte Date para armazernar no BD
-        const fim_iso = compromisso.getHorario_fim().toISOString(); // converte Date para armazernar no BD
-        const descricao = compromisso.getDescricao();
+    const inicio_iso = compromisso.getHorario_inicio().toISOString();
+    const fim_iso = compromisso.getHorario_fim().toISOString();
+    const descricao = compromisso.getDescricao();
 
-        if (id == 0) {
-      // INSERT (cria um novo compromisso)
-            const stmt = this.bd.prepare(
-                `INSERT INTO Compromissos (horario_inicio, horario_fim, descricao)
-                    VALUES (?, ?, ?)`
-                );
+    // Sempre vai fazer INSERT
+    const comando = this.bd.prepare(
+        `INSERT INTO Compromissos (horario_inicio, horario_fim, descricao)
+            VALUES (?, ?, ?)`
+    );
 
-            const result = stmt.run(inicio_iso, fim_iso, descricao);
+    const result = comando.run(inicio_iso, fim_iso, descricao);
 
-      // atualiza o id dentro do objeto com um id gerado pelo banco
-            compromisso.setId(Number(result.lastInsertRowid));
-            return compromisso;
-        } 
-        else {
-      // UPDATE (para edição de compromisso existente)
-            const stmt = this.bd.prepare(
-                `UPDATE Compromissos
-                    SET horario_inicio = ?, horario_fim = ?, descricao = ?
-                    WHERE id = ?`
-            );
-
-            stmt.run(inicio_iso, fim_iso, descricao, id);
-
-            return compromisso;
-        }
+    // Atualiza o id com o número gerado pelo BD
+    compromisso.setId(Number(result.lastInsertRowid));
+    return compromisso;
     }
 }
